@@ -74,8 +74,24 @@ const getMOTOMessage = async () => {
     const lastDayVolume = aveta(data.volume_24h_usd, {
         digits: 5
     });
+    
+    const circSupply = aveta(data.circSupply, {
+        digits: 5
+    });
 
-    const message = `👾 MOTO Token Price 👾\n\n💲 USD Price: $${usdPrice}\nΞ Eth Price: ${ethPrice}\n\n📊 Market Cap: $${marketCap}\n💰 Holder count: ${holderCount}\n💵 Liquidity: $${liquidity}\n🕛 24h Volume: $${lastDayVolume}`;
+    const message = `  
+*$MOTO Token Stats*
+
+🛒 *Total Supply:* $10bn
+🏦 *Circ. Supply:* $${circSupply}
+💰 *Marketcap:* $${marketCap}
+💸 *Price:* $${usdPrice}
+📊 *Volume:* $${lastDayVolume}
+🔐 *Liquidity:* $${liquidity}
+👥 *Holders:* ${holderCount}
+
+app.miyamotoproject.org
+`.trim();
 
     return message;
 
@@ -91,6 +107,7 @@ bot.on('callback_query', async (query) => {
         const content = await getMOTOMessage();
         
         await bot.editMessageText(content, {
+            parse_mode: 'Markdown',
             message_id: message.message_id,
             chat_id: chatId
         });
@@ -109,6 +126,7 @@ bot.onText(/\/price/, async (msg, match) => {
     const content = await getMOTOMessage();
     
     await bot.editMessageText(content, {
+        parse_mode: 'Markdown',
         message_id: message.message_id,
         chat_id: chatId
     });
