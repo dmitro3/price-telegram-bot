@@ -6,16 +6,13 @@ import TelegramBot from 'node-telegram-bot-api';
 
 import { aveta } from 'aveta';
 
-// replace the value below with the Telegram token you receive from @BotFather
 const token = process.env.BOT_TOKEN!;
 
-// Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, {
     polling: true
 });
 
-// Matches "/echo [whatever]"
-bot.onText(/\/start/, (msg, match) => {
+bot.onText(/\/start/, (msg) => {
 
     const chatId = msg.chat.id;
     bot.sendMessage(chatId, '👾 Welcome to the MOTO price Telegram bot! 👾\n\nWhat would you like to do? Use /price to get real time statistics about the MOTO token, or /scan to get complete analysis about any other token', {
@@ -100,7 +97,7 @@ bot.on('callback_query', async (query) => {
     }
 
     if (data === 'scan') {
-        bot.sendMessage(chatId, '🔍 This features is not available yet!');
+        bot.sendMessage(chatId, '🔍 This feature is not available yet!');
     }
 });
 
@@ -115,6 +112,13 @@ bot.onText(/\/price/, async (msg, match) => {
         message_id: message.message_id,
         chat_id: chatId
     });
+});
+
+bot.onText(/\/scan/, async (msg, match) => {
+
+    const chatId = msg.chat.id;
+    await bot.sendMessage(chatId, '🔍 This feature is not available yet!');
+
 });
 
 bot.on('message', (msg) => {
