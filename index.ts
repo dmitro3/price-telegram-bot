@@ -124,3 +124,6 @@ bot.onText(/\/scan/, async (msg, match) => {
 bot.on('message', (msg) => {
     const chatId = msg.chat.id;
 });
+
+
+console.log(`🤖 Miyamoto Price bot is started!`);
