@@ -80,7 +80,7 @@ const getMOTOMessage = async () => {
     });
 
     const message = `  
-*$MOTO Token Stats*
+$MOTO Token Stats
 
 🛒 *Total Supply:* $10bn
 🏦 *Circ. Supply:* $${circSupply}
