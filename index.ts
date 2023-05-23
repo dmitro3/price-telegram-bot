@@ -48,8 +48,10 @@ const getMOTOMessage = async () => {
         price_eth: number;
         price_usd: number;
         liquidity: number;
+        liquidity_usd: number;
         holder_count: number;
         circSupply: number;
+        volume_24h_usd: number;
     };
 
     const marketCap = aveta(data.circSupply * data.price_usd, {
@@ -68,30 +70,46 @@ const getMOTOMessage = async () => {
         digits: 2
     });
 
-    const message = `👾 MOTO Token Price 👾\n\n→ USD Price: ${usdPrice}\n→ Eth Price: ${ethPrice}\n\n→ Market Cap : ${marketCap}\n→ Holder count : ${holderCount}`;
+    const liquidity = aveta(data.liquidity_usd, {
+        digits: 4
+    });
+
+    const lastDayVolume = aveta(data.volume_24h_usd, {
+        digits: 5
+    });
+
+    const message = `👾 MOTO Token Price 👾\n\n💲 USD Price: $${usdPrice}\nΞ Eth Price: ${ethPrice}\n\n📊 Market Cap: $${marketCap}\n💰 Holder count: ${holderCount}\n💵 Liquidity: $${liquidity}\n🕛 24h Volume: $${lastDayVolume}`;
 
     return message;
 
 }
 
-bot.on('callback_query', query => {
+bot.on('callback_query', async (query) => {
     const chatId = query.message!.chat.id;
     const data = query.data;
     
     if (data === 'price') {
-        bot.sendMessage(chatId, '📈 Priced')
+        const message = await bot.sendMessage(chatId, 'Loading...');
+
+        const content = await getMOTOMessage();
+        
+        await bot.editMessageText(content, {
+            message_id: message.message_id,
+            chat_id: chatId
+        });
     }
 
     if (data === 'scan') {
-        bot.sendMessage(chatId, '🔍 Scanned')
+        bot.sendMessage(chatId, '🔍 This features is not available yet!');
     }
 });
 
 bot.onText(/\/price/, async (msg, match) => {
 
     const chatId = msg.chat.id;
-    const content = await getMOTOMessage();
     const message = await bot.sendMessage(chatId, 'Loading...');
+
+    const content = await getMOTOMessage();
     
     await bot.editMessageText(content, {
         message_id: message.message_id,
@@ -100,8 +118,5 @@ bot.onText(/\/price/, async (msg, match) => {
 });
 
 bot.on('message', (msg) => {
-  const chatId = msg.chat.id;
-
-  // send a message to the chat acknowledging receipt of their message
-  //bot.sendMessage(chatId, 'Received your message');
+    const chatId = msg.chat.id;
 });
